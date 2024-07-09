@@ -1,0 +1,12 @@
+[ 단일 책임 원칙 : SRP, Single Responsibility Principle ]
+[ 리스코프 치환 원칙 : LSP, The Liskov Substitution Principle ]
+[ 인터페이스 분리 원칙 : ISP , The Interface Segregation Principle ]
+[ 의존관계 역전 원칙 : DIP, The Dependency Inversion Principle ]
+[ 개방 폐쇄 원칙 : OCP, Open-Closed Principle ]
+- 객체지향 설계 원칙 중의 하나
+- 간단히 정의하자면 '클래스나 모듈은 확장에는 열려 있어야 하고 변경에는 닫혀 있어야 한다' 라고 할 수 있음
+
+
+
+[ 팩토리 ]
+- 객채의 생성 방법을 결정하고 그렇게 만들어진 오브젝트를 돌려주는 것
