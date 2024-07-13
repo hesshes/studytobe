@@ -1,23 +1,18 @@
 package com.hesshes.studytobe.dao;
 
-//list 1-17
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+//list 1-18
+@Configuration // application context or bean factory config info
 public class DaoFactory {
+	@Bean // object constructor
 	public UserDao userDao() {
 		UserDao userDao = new UserDao(connectionMaker());
 		return userDao;
 	}
 
-	public UserDao accountDao() {
-		UserDao userDao = new UserDao(connectionMaker());
-		return userDao;
-	}
-
-	public UserDao messageDao() {
-		UserDao userDao = new UserDao(connectionMaker());
-		return userDao;
-	}
-
-	// list 1-16 중복 제거를 위해 분리한 코드
+	@Bean
 	public ConnectionMaker connectionMaker() {
 		return new DConnectionMaker();
 	}

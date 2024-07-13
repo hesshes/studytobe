@@ -7,15 +7,13 @@ import java.sql.SQLException;
 
 import com.hesshes.studytobe.domain.User;
 
-//list 1-23 
+//list 1-22 
 public class UserDao {
 
-	private ConnectionMaker connectionMaker;	// 읽기 전용 정보이기 때문에 상관없음
-	// 아래 로컬 변수들은 싱글톤으로 동작하는 스프링에서는 심각한 문제를 일으키는 예제코드
-	private Connection c;
-	private User user;
+	private static UserDao INSTANCE;
+	private ConnectionMaker connectionMaker;
 
-	public UserDao(ConnectionMaker connectionMaker) {
+	private UserDao(ConnectionMaker connectionMaker) {
 		this.connectionMaker = connectionMaker;
 	}
 
@@ -37,7 +35,7 @@ public class UserDao {
 
 	public User get(String id) throws ClassNotFoundException, SQLException {
 
-		this.c = connectionMaker.makeConnection();
+		Connection c = connectionMaker.makeConnection();
 
 		PreparedStatement ps = c.prepareStatement("select * from user where id = ?");
 
@@ -45,16 +43,22 @@ public class UserDao {
 
 		ResultSet rs = ps.executeQuery();
 		rs.next();
-		this.user = new User();
-		this.user.setId(rs.getString("id"));
-		this.user.setName(rs.getString("name"));
-		this.user.setPassword(rs.getString("password"));
+		User user = new User();
+		user.setId(rs.getString("id"));
+		user.setName(rs.getString("name"));
+		user.setPassword(rs.getString("password"));
 
 		rs.close();
 		ps.close();
 		c.close();
 
-		return this.user;
+		return user;
+	}
+
+	public static synchronized UserDao getInstance() {
+		if (INSTANCE == null)
+			INSTANCE = new UserDao(null);
+		return INSTANCE;
 	}
 
 }
