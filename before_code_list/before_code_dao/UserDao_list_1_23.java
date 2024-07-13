@@ -5,21 +5,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
 import com.hesshes.studytobe.domain.User;
 
-//list 1-27 
+//list 1-23 
 public class UserDao {
 
-	private ConnectionMaker connectionMaker;
+	private ConnectionMaker connectionMaker;	// 읽기 전용 정보이기 때문에 상관없음
 	// 아래 로컬 변수들은 싱글톤으로 동작하는 스프링에서는 심각한 문제를 일으키는 예제코드
 	private Connection c;
 	private User user;
 
-	public UserDao() {
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-		this.connectionMaker = context.getBean("connectionMaker", ConnectionMaker.class);
+	public UserDao(ConnectionMaker connectionMaker) {
+		this.connectionMaker = connectionMaker;
 	}
 
 	public void add(User user) throws ClassNotFoundException, SQLException {

@@ -5,11 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
 import com.hesshes.studytobe.domain.User;
 
-//list 1-27 
+//list 1-24 
 public class UserDao {
 
 	private ConnectionMaker connectionMaker;
@@ -17,9 +15,9 @@ public class UserDao {
 	private Connection c;
 	private User user;
 
-	public UserDao() {
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-		this.connectionMaker = context.getBean("connectionMaker", ConnectionMaker.class);
+	//관계설정 책임 분리전의 생성자
+	public UserDao(ConnectionMaker connectionMaker) {
+		this.connectionMaker = new DConnectionMaker();
 	}
 
 	public void add(User user) throws ClassNotFoundException, SQLException {
