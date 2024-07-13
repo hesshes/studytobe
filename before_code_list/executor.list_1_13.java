@@ -3,17 +3,18 @@ package com.hesshes.studytobe;
 import java.sql.SQLException;
 
 import com.hesshes.studytobe.dao.ConnectionMaker;
-import com.hesshes.studytobe.dao.DaoFactory;
 import com.hesshes.studytobe.dao.NConnectionMaker;
 import com.hesshes.studytobe.dao.UserDao;
 import com.hesshes.studytobe.domain.User;
 
-//list_1_15
+//list_1_13
 public class executor {
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 
-		UserDao dao = new DaoFactory().userDao();
+		ConnectionMaker connectionMaker = new NConnectionMaker();
+
+		UserDao dao = new UserDao(connectionMaker);
 
 		User user = new User();
 		user.setId("hesshes2");

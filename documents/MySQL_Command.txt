@@ -18,7 +18,7 @@ CREATE USER '{username}'@'%' IDENTIFIED BY '{password}';
 ex) CREATE USER 'tobe'@'localhost' IDENTIFIED BY '1234';
 
 // 권한
-GRANT ALL PRIVILEGES ON tobe.* TO root@localhost IDENTIFIED BY 't@eWoo0151';
+GRANT ALL PRIVILEGES ON tobe.* TO 'root'@'localhost' IDENTIFIED BY 't@eWoo0151';
 
 # 사용자(user)를 추가하면서 패스워드까지 설정
 create user 사용자ID@localhost identified by '비밀번호';
