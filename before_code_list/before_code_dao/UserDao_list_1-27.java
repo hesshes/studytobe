@@ -9,7 +9,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import com.hesshes.studytobe.domain.User;
 
-//list 1-31 
+//list 1-27 
 public class UserDao {
 
 	private ConnectionMaker connectionMaker;
@@ -17,8 +17,9 @@ public class UserDao {
 	private Connection c;
 	private User user;
 
-	public UserDao(ConnectionMaker connectionMaker) {
-		this.connectionMaker = connectionMaker;
+	public UserDao() {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+		this.connectionMaker = context.getBean("connectionMaker", ConnectionMaker.class);
 	}
 
 	public void add(User user) throws ClassNotFoundException, SQLException {
