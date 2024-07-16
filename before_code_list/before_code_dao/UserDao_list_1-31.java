@@ -9,7 +9,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import com.hesshes.studytobe.domain.User;
 
-//list 1-33 
+//list 1-31 
 public class UserDao {
 
 	private ConnectionMaker connectionMaker;
@@ -17,10 +17,7 @@ public class UserDao {
 	private Connection c;
 	private User user;
 
-	public UserDao() {
-	}
-	
-	public void setConnectionMaker(ConnectionMaker connectionMaker) {
+	public UserDao(ConnectionMaker connectionMaker) {
 		this.connectionMaker = connectionMaker;
 	}
 
