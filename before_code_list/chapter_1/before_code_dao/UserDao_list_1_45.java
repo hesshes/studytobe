@@ -11,7 +11,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import com.hesshes.studytobe.domain.User;
 
-//list 2-7, 2-8
+//list 1-45
 public class UserDao {
 
 	private DataSource dataSource;
@@ -20,11 +20,16 @@ public class UserDao {
 		this.dataSource = dataSource;
 	}
 
+	private ConnectionMaker connectionMaker;
 	// 아래 로컬 변수들은 싱글톤으로 동작하는 스프링에서는 심각한 문제를 일으키는 예제코드
 	private Connection c;
 	private User user;
 
 	public UserDao() {
+	}
+
+	public void setConnectionMaker(ConnectionMaker connectionMaker) {
+		this.connectionMaker = connectionMaker;
 	}
 
 	public void add(User user) throws SQLException {
@@ -63,34 +68,6 @@ public class UserDao {
 		c.close();
 
 		return this.user;
-	}
-
-	public void deleteAll() throws SQLException {
-
-		Connection c = dataSource.getConnection();
-
-		PreparedStatement ps = c.prepareStatement("delete from user");
-
-		ps.executeUpdate();
-
-		ps.close();
-		c.close();
-	}
-
-	public int getCount() throws SQLException {
-		Connection c = dataSource.getConnection();
-
-		PreparedStatement ps = c.prepareStatement("select count(*) from user");
-
-		ResultSet rs = ps.executeQuery();
-		rs.next();
-		int count = rs.getInt(1);
-
-		rs.close();
-		ps.close();
-		c.close();
-
-		return count;
 	}
 
 }
