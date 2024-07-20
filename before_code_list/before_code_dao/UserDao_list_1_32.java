@@ -5,20 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.sql.DataSource;
-
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.hesshes.studytobe.domain.User;
 
-//list 1-45
+//list 1-33 
 public class UserDao {
-
-	private DataSource dataSource;
-
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
 
 	private ConnectionMaker connectionMaker;
 	// 아래 로컬 변수들은 싱글톤으로 동작하는 스프링에서는 심각한 문제를 일으키는 예제코드
@@ -27,14 +19,14 @@ public class UserDao {
 
 	public UserDao() {
 	}
-
+	
 	public void setConnectionMaker(ConnectionMaker connectionMaker) {
 		this.connectionMaker = connectionMaker;
 	}
 
-	public void add(User user) throws SQLException {
+	public void add(User user) throws ClassNotFoundException, SQLException {
 
-		this.c = dataSource.getConnection();
+		Connection c = connectionMaker.makeConnection();
 
 		PreparedStatement ps = c.prepareStatement("insert into user (id, name, password) values(?,?,?)");
 
@@ -48,9 +40,9 @@ public class UserDao {
 		c.close();
 	}
 
-	public User get(String id) throws SQLException {
+	public User get(String id) throws ClassNotFoundException, SQLException {
 
-		this.c = dataSource.getConnection();
+		this.c = connectionMaker.makeConnection();
 
 		PreparedStatement ps = c.prepareStatement("select * from user where id = ?");
 

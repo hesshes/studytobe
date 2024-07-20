@@ -11,12 +11,12 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import com.hesshes.studytobe.domain.User;
 
-//list 1-45
+//list 1-42
 public class UserDao {
 
 	private DataSource dataSource;
 
-	public void setDataSource(DataSource dataSource) {
+	private void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
