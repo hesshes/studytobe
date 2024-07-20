@@ -1,6 +1,7 @@
-package before_code;
+package com.hesshes.studytobe.domain;
 
-public class list_1_1_User {
+// list-??
+public class User {
 
 	String id;
 	String name;
