@@ -4,27 +4,18 @@ import static org.junit.Assert.assertThat;
 
 import java.sql.SQLException;
 
-import javax.sql.DataSource;
-
 import static org.hamcrest.CoreMatchers.is;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.hesshes.studytobe.dao.UserDao;
 import com.hesshes.studytobe.domain.User;
 
-//list 2-23
-//application Context 가 없는 di 테스트
+//list 2-15,2-16
 public class UserDaoTestJunit {
 
     private UserDao dao;
@@ -35,17 +26,12 @@ public class UserDaoTestJunit {
 
     @Before
     public void setUp() {
+        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+        this.dao = context.getBean("userDao", UserDao.class);
 
-        dao = new UserDao();
-        
         this.user1 = new User("junit2", "test2", "test2");
         this.user2 = new User("junit3", "test3", "test3");
         this.user3 = new User("junit4", "test4", "test4");
-        DataSource dataSource = new SingleConnectionDataSource(
-                "jdbc:mysql://localhost:3306/tobe?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8", "tobe",
-                "tobe", true);
-
-        dao.setDataSource(dataSource);
     }
 
     @Test
