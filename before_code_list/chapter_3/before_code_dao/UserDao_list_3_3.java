@@ -9,12 +9,10 @@ import javax.sql.DataSource;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.hesshes.studytobe.DeleteAllStatement;
-import com.hesshes.studytobe.StatementStrategy;
 import com.hesshes.studytobe.domain.User;
 
-//list 3-10
-abstract public class UserDao {
+//list 3-3
+public class UserDao {
 
 	private DataSource dataSource;
 
@@ -81,9 +79,7 @@ abstract public class UserDao {
 		PreparedStatement ps = null;
 		try {
 			c = dataSource.getConnection();
-			StatementStrategy strategy = new DeleteAllStatement();
-			ps = strategy.makePreparedStatement(c);
-			
+			ps = c.prepareStatement("delete from users");
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			throw e;
@@ -117,32 +113,31 @@ abstract public class UserDao {
 			rs = ps.executeQuery();
 			rs.next();
 			return rs.getInt(1);
-
+			
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if (rs != null) {
+			if( rs !=null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
 				}
 			}
-			if (ps != null) {
+			if( ps !=null) {
 				try {
 					ps.close();
 				} catch (SQLException e) {
 				}
 			}
-			if (c != null) {
+			if( c !=null) {
 				try {
 					c.close();
 				} catch (SQLException e) {
 				}
 			}
-
+			
+			
 		}
 	}
-
-	abstract protected PreparedStatement makeStatement(Connection c) throws SQLException;
 
 }

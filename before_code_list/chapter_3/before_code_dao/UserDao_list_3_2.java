@@ -9,12 +9,10 @@ import javax.sql.DataSource;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.hesshes.studytobe.DeleteAllStatement;
-import com.hesshes.studytobe.StatementStrategy;
 import com.hesshes.studytobe.domain.User;
 
-//list 3-10
-abstract public class UserDao {
+//list 3-2
+public class UserDao {
 
 	private DataSource dataSource;
 
@@ -81,9 +79,7 @@ abstract public class UserDao {
 		PreparedStatement ps = null;
 		try {
 			c = dataSource.getConnection();
-			StatementStrategy strategy = new DeleteAllStatement();
-			ps = strategy.makePreparedStatement(c);
-			
+			ps = c.prepareStatement("delete from users");
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			throw e;
@@ -106,43 +102,19 @@ abstract public class UserDao {
 	}
 
 	public int getCount() throws SQLException {
-
 		Connection c = dataSource.getConnection();
-		ResultSet rs = null;
-		PreparedStatement ps = null;
 
-		try {
-			c = dataSource.getConnection();
-			ps = c.prepareStatement("select count(*) from users");
-			rs = ps.executeQuery();
-			rs.next();
-			return rs.getInt(1);
+		PreparedStatement ps = c.prepareStatement("select count(*) from user");
 
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-				}
-			}
-			if (ps != null) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-				}
-			}
-			if (c != null) {
-				try {
-					c.close();
-				} catch (SQLException e) {
-				}
-			}
+		ResultSet rs = ps.executeQuery();
+		rs.next();
+		int count = rs.getInt(1);
 
-		}
+		rs.close();
+		ps.close();
+		c.close();
+
+		return count;
 	}
-
-	abstract protected PreparedStatement makeStatement(Connection c) throws SQLException;
 
 }

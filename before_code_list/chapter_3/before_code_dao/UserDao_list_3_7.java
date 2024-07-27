@@ -9,11 +9,9 @@ import javax.sql.DataSource;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.hesshes.studytobe.DeleteAllStatement;
-import com.hesshes.studytobe.StatementStrategy;
 import com.hesshes.studytobe.domain.User;
 
-//list 3-10
+//list 3-7
 abstract public class UserDao {
 
 	private DataSource dataSource;
@@ -81,9 +79,7 @@ abstract public class UserDao {
 		PreparedStatement ps = null;
 		try {
 			c = dataSource.getConnection();
-			StatementStrategy strategy = new DeleteAllStatement();
-			ps = strategy.makePreparedStatement(c);
-			
+			ps = makeStatement(c);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			throw e;
