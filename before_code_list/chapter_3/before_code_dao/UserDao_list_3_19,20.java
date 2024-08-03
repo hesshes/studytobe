@@ -9,34 +9,28 @@ import javax.sql.DataSource;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.hesshes.studytobe.JdbcContext;
 import com.hesshes.studytobe.StatementStrategy;
 import com.hesshes.studytobe.domain.User;
 
-//list 3-22
+//list 3-19,20
 public class UserDao {
-    // 아래 로컬 변수들은 싱글톤으로 동작하는 스프링에서는 심각한 문제를 일으키는 예제코드
-    private Connection c;
-    private User user;
 
     private DataSource dataSource;
-
-    private JdbcContext jdbcContext;
-
-    public UserDao() {
-    }
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    public void setJdbcContext(JdbcContext jdbcContext) {
-        this.jdbcContext = jdbcContext;
+    // 아래 로컬 변수들은 싱글톤으로 동작하는 스프링에서는 심각한 문제를 일으키는 예제코드
+    private Connection c;
+    private User user;
+
+    public UserDao() {
     }
 
     public void add(final User user) throws SQLException {
 
-        this.jdbcContext.workWithStatementStrategy(new StatementStrategy() {
+        jdbcContextWithStatementStrategy(new StatementStrategy() {
 
             public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
                 PreparedStatement ps = c.prepareStatement("insert into user(id, name, password) values(?,?,?)");
@@ -79,7 +73,7 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException {
-        this.jdbcContext.workWithStatementStrategy(new StatementStrategy() {
+        jdbcContextWithStatementStrategy(new StatementStrategy() {
             public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
                 return c.prepareStatement("delete from user");
             }

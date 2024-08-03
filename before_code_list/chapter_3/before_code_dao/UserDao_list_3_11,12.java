@@ -9,44 +9,39 @@ import javax.sql.DataSource;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.hesshes.studytobe.JdbcContext;
 import com.hesshes.studytobe.StatementStrategy;
 import com.hesshes.studytobe.domain.User;
 
-//list 3-22
+//list 3-11, 3-12
 public class UserDao {
-    // 아래 로컬 변수들은 싱글톤으로 동작하는 스프링에서는 심각한 문제를 일으키는 예제코드
-    private Connection c;
-    private User user;
 
     private DataSource dataSource;
-
-    private JdbcContext jdbcContext;
-
-    public UserDao() {
-    }
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    public void setJdbcContext(JdbcContext jdbcContext) {
-        this.jdbcContext = jdbcContext;
+    // 아래 로컬 변수들은 싱글톤으로 동작하는 스프링에서는 심각한 문제를 일으키는 예제코드
+    private Connection c;
+    private User user;
+
+    public UserDao() {
     }
 
-    public void add(final User user) throws SQLException {
+    public void add(User user) throws SQLException {
 
-        this.jdbcContext.workWithStatementStrategy(new StatementStrategy() {
+        this.c = dataSource.getConnection();
 
-            public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-                PreparedStatement ps = c.prepareStatement("insert into user(id, name, password) values(?,?,?)");
-                ps.setString(1, user.getId());
-                ps.setString(2, user.getName());
-                ps.setString(3, user.getPassword());
-                return ps;
+        PreparedStatement ps = c.prepareStatement("insert into user (id, name, password) values(?,?,?)");
 
-            }
-        });
+        ps.setString(1, user.getId());
+        ps.setString(2, user.getName());
+        ps.setString(3, user.getPassword());
+
+        ps.executeUpdate();
+
+        ps.close();
+        c.close();
     }
 
     public User get(String id) throws SQLException {
@@ -79,11 +74,8 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException {
-        this.jdbcContext.workWithStatementStrategy(new StatementStrategy() {
-            public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-                return c.prepareStatement("delete from user");
-            }
-        });
+        StatementStrategy st = new DeleteAllStatement();
+        jdbcContextWithStatementStrategy(st);
     }
 
     public int getCount() throws SQLException {
@@ -94,7 +86,7 @@ public class UserDao {
 
         try {
             c = dataSource.getConnection();
-            ps = c.prepareStatement("select count(*) from user");
+            ps = c.prepareStatement("select count(*) from users");
             rs = ps.executeQuery();
             rs.next();
             return rs.getInt(1);
