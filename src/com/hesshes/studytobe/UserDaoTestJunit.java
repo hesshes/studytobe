@@ -30,7 +30,7 @@ public class UserDaoTestJunit {
     public void setUp() {
 
         dao = new UserDao();
-        
+
         this.user1 = new User("junit2", "test2", "test2");
         this.user2 = new User("junit3", "test3", "test3");
         this.user3 = new User("junit4", "test4", "test4");
@@ -85,4 +85,5 @@ public class UserDaoTestJunit {
 
         dao.get("unknow_id");
     }
+
 }
