@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-//list 3-28
+//list 3-21
 public class JdbcContext {
     private DataSource dataSource;
 
@@ -39,13 +39,5 @@ public class JdbcContext {
                 }
             }
         }
-    }
-
-    public void executeSql(final String query) throws SQLException {
-        workWithStatementStrategy(new StatementStrategy() {
-            public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-                return c.prepareStatement(query);
-            }
-        });
     }
 }

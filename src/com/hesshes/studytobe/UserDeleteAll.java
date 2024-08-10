@@ -8,10 +8,10 @@ import com.hesshes.studytobe.dao.UserDao;
 
 public class UserDeleteAll extends UserDao {
 
-	protected PreparedStatement makeStatement(Connection c) throws SQLException {
-		PreparedStatement ps = c.prepareStatement("delete from users");
+    protected PreparedStatement makeStatement(Connection c) throws SQLException {
+        PreparedStatement ps = c.prepareStatement("delete from users");
 
-		return ps;
-	}
+        return ps;
+    }
 
 }

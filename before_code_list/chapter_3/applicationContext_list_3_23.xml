@@ -3,11 +3,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
 						 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
-    <!-- list 3-24 -->
+    <!-- list 3-23 -->
     <bean id="userDao" class="com.hesshes.studytobe.dao.UserDao">
         <property name="dataSource" ref="dataSource" />
+        <property name="jdbcContext" ref="jdbcContext" />
     </bean>
 
+    <bean id="jdbcContext" class="com.hesshes.studytobe.JdbcContext">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.cj.jdbc.Driver" />

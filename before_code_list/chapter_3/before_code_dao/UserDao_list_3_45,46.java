@@ -15,7 +15,7 @@ import com.hesshes.studytobe.JdbcContext;
 import com.hesshes.studytobe.StatementStrategy;
 import com.hesshes.studytobe.domain.User;
 
-//list 3-47, 48
+//list 3-45,46
 public class UserDao {
 
     private Connection c;
@@ -42,22 +42,38 @@ public class UserDao {
 
     public void add(final User user) throws SQLException {
 
-        this.jdbcTemplate.update("insert into users(id, name, password) values (?, ?, ?)", user.getId(), user.getName(),
-                user.getPassword());
+        this.jdbcContext.workWithStatementStrategy(new StatementStrategy() {
+
+            public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+                PreparedStatement ps = c.prepareStatement("insert into user(id, name, password) values(?,?,?)");
+                ps.setString(1, user.getId());
+                ps.setString(2, user.getName());
+                ps.setString(3, user.getPassword());
+                return ps;
+
+            }
+        });
     }
 
     public User get(String id) throws SQLException {
+
         this.c = dataSource.getConnection();
+
         PreparedStatement ps = c.prepareStatement("select * from user where id = ?");
+
         ps.setString(1, id);
+
         ResultSet rs = ps.executeQuery();
+
         User user = null;
+
         if (rs.next()) {
             user = new User();
             user.setId(rs.getString("id"));
             user.setName(rs.getString("name"));
             user.setPassword(rs.getString("password"));
         }
+
         rs.close();
         ps.close();
         c.close();
@@ -67,10 +83,13 @@ public class UserDao {
         }
         return user;
     }
-
-    // JdbcTemplate의 내장 콜백 사용
+    // JdbcTemplate의 콜백과 템플릿 메소드 사용
     public void deleteAll() throws SQLException {
-        this.jdbcTemplate.update("delete from user");
+        this.jdbcTemplate.update(new PreparedStatementCreator() {
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                return con.prepareStatement("delete from user");
+            }
+        });
     }
 
     public int getCount() throws SQLException {
