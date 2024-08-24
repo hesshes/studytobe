@@ -13,45 +13,16 @@ import com.hesshes.studytobe.domain.User;
 import com.hesshes.studytobe.exception.DuplicateUserIdException;
 import com.mysql.cj.exceptions.MysqlErrorNumbers;
 
-//list 4-14
-public class UserDao {
-    private JdbcTemplate jdbcTemplate;
+//list 4-20 ( chapter 4 는 인터페이스부터, 그 외에 예외처리 내용은 skip 됨)
+public interface UserDao {
+    void add(User user);
 
-    private RowMapper<User> userMapper = new RowMapper<User>() {
-        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            User user = new User();
-            user.setId(rs.getString("id"));
-            user.setName(rs.getString("name"));
-            user.setPassword(rs.getString("password"));
-            return user;
-        }
-    };
+    User get(String id);
 
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
+    List<User> getAll();
 
-    public void add(User user) {
-        this.jdbcTemplate.update("insert into user(id, name, password) values (?, ?, ?)", user.getId(), user.getName(),
-                user.getPassword());
-    }
+    void deleteAll();
 
-    public User get(String id) throws SQLException {
-        return this.jdbcTemplate.queryForObject("select * from user where id = ? ", new Object[] { id },
-                this.userMapper);
-    }
+    int getCount();
 
-    // JdbcTemplate의 내장 콜백 사용
-    public void deleteAll() { // throws SQLExeption 예외처리 삭제됨. 나중에 챕터 4에서 설명
-        this.jdbcTemplate.update("delete from user");
-    }
-
-    // 2개의 콜백오브젝트 사용
-    public int getCount() throws SQLException {
-        return this.jdbcTemplate.queryForInt("select count(*) from user");
-    }
-
-    public List<User> getAll() {
-        return this.jdbcTemplate.query("select * from user order by id ", this.userMapper);
-    }
 }

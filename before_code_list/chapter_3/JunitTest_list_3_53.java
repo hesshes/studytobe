@@ -26,7 +26,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.hesshes.studytobe.dao.UserDao;
 import com.hesshes.studytobe.domain.User;
 
-//list 4-23
+//list 3-52
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/applicationContext.xml")
 public class JunitTest {
