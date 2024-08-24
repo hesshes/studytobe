@@ -10,10 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.hesshes.studytobe.domain.User;
-import com.hesshes.studytobe.exception.DuplicateUserIdException;
-import com.mysql.cj.exceptions.MysqlErrorNumbers;
 
-//list 4-14
+//list 3-55, 56, 57, 58 ( 최종 UserDao )
 public class UserDao {
     private JdbcTemplate jdbcTemplate;
 
@@ -31,7 +29,7 @@ public class UserDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void add(User user) {
+    public void add(final User user) throws SQLException {
         this.jdbcTemplate.update("insert into user(id, name, password) values (?, ?, ?)", user.getId(), user.getName(),
                 user.getPassword());
     }
@@ -42,7 +40,7 @@ public class UserDao {
     }
 
     // JdbcTemplate의 내장 콜백 사용
-    public void deleteAll() { // throws SQLExeption 예외처리 삭제됨. 나중에 챕터 4에서 설명
+    public void deleteAll()  { // throws SQLExeption  예외처리 삭제됨. 나중에 챕터 4에서 설명
         this.jdbcTemplate.update("delete from user");
     }
 
