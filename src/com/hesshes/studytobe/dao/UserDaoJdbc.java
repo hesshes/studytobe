@@ -9,8 +9,10 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.hesshes.studytobe.domain.Level;
 import com.hesshes.studytobe.domain.User;
 
+//list 5-12
 public class UserDaoJdbc implements UserDao {
     private JdbcTemplate jdbcTemplate;
 
@@ -20,6 +22,9 @@ public class UserDaoJdbc implements UserDao {
             user.setId(rs.getString("id"));
             user.setName(rs.getString("name"));
             user.setPassword(rs.getString("password"));
+            user.setLevel(Level.valueOf(rs.getInt("level")));
+            user.setLogin(rs.getInt("login"));
+            user.setRecoomend(rs.getInt("recommend"));
             return user;
         }
     };
@@ -29,8 +34,8 @@ public class UserDaoJdbc implements UserDao {
     }
 
     public void add(final User user) {
-        this.jdbcTemplate.update("insert into user(id, name, password) values (?, ?, ?)", user.getId(), user.getName(),
-                user.getPassword());
+        this.jdbcTemplate.update("insert into user(id, name, password, level, login, recommend) values (?, ?, ?, ?, ?, ?)", user.getId(),
+                user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecoomend());
     }
 
     public User get(String id) {
@@ -50,6 +55,13 @@ public class UserDaoJdbc implements UserDao {
 
     public List<User> getAll() {
         return this.jdbcTemplate.query("select * from user order by id ", this.userMapper);
+    }
+
+    public void update(User user) {
+        this.jdbcTemplate.update(
+                "update user set name = ?, password = ?, level = ?, login = ?, " + " recommend = ? where id = ? ",
+                user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecoomend(),
+                user.getId());
     }
 
 }
