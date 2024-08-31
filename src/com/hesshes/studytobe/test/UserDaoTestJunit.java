@@ -1,4 +1,4 @@
-package com.hesshes.studytobe;
+package com.hesshes.studytobe.test;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.matchers.JUnitMatchers.hasItem;
@@ -31,7 +31,7 @@ import com.hesshes.studytobe.dao.UserDao;
 import com.hesshes.studytobe.domain.Level;
 import com.hesshes.studytobe.domain.User;
 
-//list 5-5,7,8,10
+//list 5-13
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/applicationContext.xml")
 public class UserDaoTestJunit {
@@ -131,7 +131,9 @@ public class UserDaoTestJunit {
     public void update() {
         dao.deleteAll();
 
-        dao.add(user1);
+        dao.add(user1); // 수정할 사용자
+        dao.add(user2); // 수정하지 않을 사용자
+
         user1.setName("update1");
         user1.setPassword("update1");
         user1.setLevel(Level.GOLD);
@@ -141,6 +143,8 @@ public class UserDaoTestJunit {
         dao.update(user1);
         User user1update = dao.get(user1.getId());
         checkSameUser(user1, user1update);
+        User user2same = dao.get(user2.getId());
+        checkSameUser(user2, user2same);
     }
 
     @Test(expected = DataAccessException.class)

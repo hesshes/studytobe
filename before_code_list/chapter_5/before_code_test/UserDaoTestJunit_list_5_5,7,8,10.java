@@ -28,12 +28,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.hesshes.studytobe.dao.UserDao;
+import com.hesshes.studytobe.domain.Level;
 import com.hesshes.studytobe.domain.User;
 
-//list 4-22,23,24
+//list 5-5,7,8,10
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/applicationContext.xml")
-public class JunitTest {
+public class UserDaoTestJunit {
 
     @Autowired
     ApplicationContext context;
@@ -48,14 +49,14 @@ public class JunitTest {
     private User user2;
     private User user3;
 
-    static Set<JunitTest> testObjects = new HashSet<JunitTest>();
+    static Set<UserDaoTestJunit> testObjects = new HashSet<UserDaoTestJunit>();
     static ApplicationContext contextObject = null;
 
     @Before
     public void setUp() {
-        this.user1 = new User("junit2", "test2", "test2");
-        this.user2 = new User("junit3", "test3", "test3");
-        this.user3 = new User("junit4", "test4", "test4");
+        this.user1 = new User("junit2", "test2", "test2", Level.BASIC, 1, 0);
+        this.user2 = new User("junit3", "test3", "test3", Level.SILVER, 55, 10);
+        this.user3 = new User("junit4", "test4", "test4", Level.GOLD, 100, 50);
     }
 
     @Test
@@ -111,6 +112,37 @@ public class JunitTest {
 
     }
 
+    @Test
+    public void addAndGet() throws SQLException {
+        dao.deleteAll();
+        assertThat(dao.getCount(), is(0));
+
+        dao.add(user1);
+        dao.add(user2);
+        assertThat(dao.getCount(), is(2));
+
+        User userget1 = dao.get(user1.getId());
+        checkSameUser(userget1, user1);
+        User userget2 = dao.get(user2.getId());
+        checkSameUser(userget2, user2);
+    }
+
+    @Test
+    public void update() {
+        dao.deleteAll();
+
+        dao.add(user1);
+        user1.setName("update1");
+        user1.setPassword("update1");
+        user1.setLevel(Level.GOLD);
+        user1.setLogin(1000);
+        user1.setRecoomend(999);
+
+        dao.update(user1);
+        User user1update = dao.get(user1.getId());
+        checkSameUser(user1, user1update);
+    }
+
     @Test(expected = DataAccessException.class)
     public void duplicateKey() {
         dao.deleteAll();
@@ -138,6 +170,9 @@ public class JunitTest {
         assertThat(user1.getId(), is(user2.getId()));
         assertThat(user1.getName(), is(user2.getName()));
         assertThat(user1.getPassword(), is(user2.getPassword()));
+        assertThat(user1.getLevel(), is(user2.getLevel()));
+        assertThat(user1.getLogin(), is(user2.getLogin()));
+        assertThat(user1.getRecoomend(), is(user2.getRecoomend()));
 
     }
 };
