@@ -27,7 +27,7 @@ import com.hesshes.studytobe.service.UserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/applicationContext.xml")
-//list 5-19
+//list 5-19,20
 public class UserSerivceTest {
     @Autowired
     UserService userService;
@@ -46,6 +46,25 @@ public class UserSerivceTest {
                 new User("test5", "tester5", "t5", Level.GOLD, 100, 100)
 
         );
+    }
+
+    @Test
+    public void add() {
+        userDao.deleteAll();
+
+        User userWithLevel = users.get(4);
+        User userWithoutLevel = users.get(0);
+        userWithoutLevel.setLevel(null);
+
+        userService.add(userWithLevel);
+        userService.add(userWithoutLevel);
+
+        User userWithLevelRead = userDao.get(userWithLevel.getId());
+        User userWithoutLevelRead = userDao.get(userWithoutLevel.getId());
+
+        assertThat(userWithLevelRead.getLevel(), is(userWithLevel.getLevel()));
+        assertThat(userWithoutLevelRead.getLevel(), is(Level.BASIC));
+
     }
 
     @Test

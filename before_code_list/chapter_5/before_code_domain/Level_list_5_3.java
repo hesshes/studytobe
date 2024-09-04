@@ -1,23 +1,17 @@
 package com.hesshes.studytobe.domain;
 
-// list 5-26
+// list 5-3
 public enum Level {
-    GOLD(3, null), SILVER(2, GOLD), BASIC(1, SILVER);
+    BASIC(1), SILVER(2), GOLD(3);
 
     private final int value;
-    private final Level next;
 
-    Level(int value, Level next) {
+    Level(int value) {
         this.value = value;
-        this.next = next;
     }
 
     public int intValue() {
         return this.value;
-    }
-
-    public Level nextLevel() {
-        return this.next;
     }
 
     public static Level valueOf(int value) {
@@ -32,4 +26,5 @@ public enum Level {
             throw new AssertionError("Unkown value : " + value);
         }
     }
+
 }

@@ -6,7 +6,7 @@ import com.hesshes.studytobe.dao.UserDao;
 import com.hesshes.studytobe.domain.Level;
 import com.hesshes.studytobe.domain.User;
 
-//list 5-27
+//list 5-23,24,25
 public class UserService {
     UserDao userDao;
 
