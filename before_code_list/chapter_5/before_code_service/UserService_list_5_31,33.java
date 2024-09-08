@@ -6,9 +6,8 @@ import com.hesshes.studytobe.dao.UserDao;
 import com.hesshes.studytobe.domain.Level;
 import com.hesshes.studytobe.domain.User;
 
-//list 5-34
-//public class UserService implements UserLevelUpgradePolicy { -- 예제 사용할 경우
-    public class UserService  {
+//list 5-31, 33
+public class UserService implements UserLevelUpgradePolicy {
     UserDao userDao;
 
     public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
@@ -48,14 +47,12 @@ import com.hesshes.studytobe.domain.User;
 
     }
 
-    //public void upgradeLevel(User user) { 예제 사용할 경우
-    protected void upgradeLevel(User user) {
+    private void upgradeLevel(User user) {
         if (user.getLevel() == Level.BASIC)
             user.setLevel(Level.SILVER);
         else if (user.getLevel() == Level.SILVER)
             user.setLevel(Level.GOLD);
         userDao.update(user);
-        ;
     }
 
 }

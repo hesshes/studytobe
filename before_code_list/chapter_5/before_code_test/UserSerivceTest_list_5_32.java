@@ -23,7 +23,7 @@ import static com.hesshes.studytobe.service.UserService.MIN_RECOMMEND_FOR_GOLD;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/applicationContext.xml")
-//list 5-35,36
+//list 5-32
 public class UserSerivceTest {
 
     @Autowired
@@ -81,22 +81,6 @@ public class UserSerivceTest {
 
     }
 
-    @Test
-    public void upgradeAllOrNothing() {
-        UserService testUserService = new TestUserService(users.get(3).getId());
-        testUserService.setUserDao(this.userDao);
-        userDao.deleteAll();
-
-        for (User user : users)
-            userDao.add(user);
-
-        try {
-            testUserService.upgradeLevels();
-            fail("TestUserServiceException exepcted");
-        } catch (TestUserServiceException e) {
-        }
-        checkLevelUpgraded(users.get(1), false);
-    }
 
     private void checkLevelUpgraded(User user, boolean upgraded) {
 
@@ -108,21 +92,4 @@ public class UserSerivceTest {
         }
     }
 
-    static class TestUserService extends UserService {
-        private String id;
-
-        private TestUserService(String id) {
-            this.id = id;
-        }
-
-        protected void upgradeLevel(User user) {
-            if (user.getId().equals(this.id))
-                throw new TestUserServiceException();
-            super.upgradeLevel(user);
-        }
-    }
-
-    static class TestUserServiceException extends RuntimeException {
-
-    }
 }
