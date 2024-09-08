@@ -6,12 +6,9 @@ import com.hesshes.studytobe.dao.UserDao;
 import com.hesshes.studytobe.domain.Level;
 import com.hesshes.studytobe.domain.User;
 
-//list 5-31, 33
-public class UserService implements UserLevelUpgradePolicy {
+//list 5-27
+public class UserService {
     UserDao userDao;
-
-    public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
-    public static final int MIN_RECOMMEND_FOR_GOLD = 30;
 
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
@@ -32,14 +29,13 @@ public class UserService implements UserLevelUpgradePolicy {
         }
     }
 
-                    
-    public boolean canUpgradeLevel(User user) {
+    private boolean canUpgradeLevel(User user) {
         Level currentLevel = user.getLevel();
         switch (currentLevel) {
         case BASIC:
-            return (user.getLogin() >= MIN_LOGCOUNT_FOR_SILVER);
+            return (user.getLogin() >= 50);
         case SILVER:
-            return (user.getRecommend() >= MIN_RECOMMEND_FOR_GOLD);
+            return (user.getRecommend() >= 30);
         case GOLD:
             return false;
         default:
@@ -48,7 +44,7 @@ public class UserService implements UserLevelUpgradePolicy {
 
     }
 
-    public void upgradeLevel(User user) {
+    private void upgradeLevel(User user) {
         if (user.getLevel() == Level.BASIC)
             user.setLevel(Level.SILVER);
         else if (user.getLevel() == Level.SILVER)
