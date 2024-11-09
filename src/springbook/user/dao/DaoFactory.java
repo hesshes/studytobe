@@ -8,10 +8,11 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 @Configuration
 public class DaoFactory {
+    
     @Bean
     public UserDao userDao() {
         UserDao userDao = new UserDao();
-        userDao.setConnectionMaker(connectionMaker());
+        userDao.setDataSource(dataSource());
         return userDao;
     }
 
@@ -19,13 +20,13 @@ public class DaoFactory {
     public ConnectionMaker connectionMaker() {
         return new DConnectionMaker();
     }
-
+    
     @Bean
     public DataSource dataSource() {
         SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
 
         dataSource.setDriverClass(com.mysql.cj.jdbc.Driver.class);
-        dataSource.setUrl("jdbc:mysql://localhost:3306/tobe?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8");
+        dataSource.setUrl("jdbc:mysql://121.162.161.70:60335/tobe?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8");
         dataSource.setUsername("tobe");
         dataSource.setPassword("t@eWoo0151");
 
