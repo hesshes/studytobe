@@ -20,7 +20,7 @@ import springbook.user.dao.UserDao;
 import springbook.user.domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "/applicationContext.xml")
+@ContextConfiguration(locations = "/applicationContext-test.xml")
 public class UserDaoTest {
 
     @Autowired
@@ -43,7 +43,7 @@ public class UserDaoTest {
 
     @Test
     public void addAndGet() throws SQLException, ClassNotFoundException {
-        dao.delteAll();
+        dao.deleteAll();
         assertThat(dao.getCount(), is(0));
 
         dao.add(user1);
@@ -63,7 +63,7 @@ public class UserDaoTest {
 
     @Test
     public void getCount() throws SQLException, ClassNotFoundException {
-        dao.delteAll();
+        dao.deleteAll();
         assertThat(dao.getCount(), is(0));
 
         User user1 = new User("tester1", "pass1", "ев╫╨ем1");
@@ -82,7 +82,7 @@ public class UserDaoTest {
 
     @Test(expected = EmptyResultDataAccessException.class)
     public void getUserFailure() throws SQLException, ClassNotFoundException {
-        dao.delteAll();
+        dao.deleteAll();
         assertThat(dao.getCount(), is(0));
 
         dao.get("unknown_id");
