@@ -15,20 +15,20 @@ public class UserDao {
 
     private DataSource dataSource;
 
-    private JdbcContext jdbcCtx;
+    private JdbcContext jdbcContext;
 
     public void setDataSource(DataSource dataSource) {
-        this.jdbcCtx = new JdbcContext();
-        this.jdbcCtx.setDataSource(dataSource);
+        this.jdbcContext = new JdbcContext();
+        this.jdbcContext.setDataSource(dataSource);
         this.dataSource = dataSource;
     }
 
     public void setJdbcContext(JdbcContext jdbcCtx) {
-        this.jdbcCtx = jdbcCtx;
+        this.jdbcContext = jdbcCtx;
     }
 
     public void add(final User user) throws ClassNotFoundException, SQLException {
-        this.jdbcCtx.workWithStatementStrategy(new StatementStrategy() {
+        this.jdbcContext.workWithStatementStrategy(new StatementStrategy() {
             public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
                 PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
 
@@ -68,11 +68,7 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException {
-        this.jdbcCtx.workWithStatementStrategy(new StatementStrategy() {
-            public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-                return c.prepareStatement("delete from users");
-            }
-        });
+        this.jdbcContext.executeSql("delete from users");
     }
 
     public int getCount() throws SQLException {
@@ -112,7 +108,6 @@ public class UserDao {
                 }
             }
         }
-
     }
 
 }
