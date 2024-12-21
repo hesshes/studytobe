@@ -9,6 +9,9 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.mysql.cj.exceptions.MysqlErrorNumbers;
+
+import springbook.exception.DuplicateUserIdException;
 import springbook.user.domain.User;
 
 public class UserDao {
@@ -17,7 +20,7 @@ public class UserDao {
 
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }   
+    }
 
     private RowMapper<User> userMapper = new RowMapper<User>() {
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -29,9 +32,9 @@ public class UserDao {
         }
     };
 
-    public void add(final User user) throws ClassNotFoundException, SQLException {
-        this.jdbcTemplate.update("insert into users(id, name, password) values(?,?,?)", user.getId(), user.getName(),
-                user.getPassword());
+    public void add(final User user) throws SQLException {
+        this.jdbcTemplate.update("insert into users(id, name, password) values(?,?,?)", user.getId(),
+                user.getName(), user.getPassword());
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
@@ -50,4 +53,5 @@ public class UserDao {
     public List<User> getAll() {
         return this.jdbcTemplate.query("select * from users order by id", this.userMapper);
     }
+
 }
