@@ -60,13 +60,10 @@ public class UserDaoTest {
         assertThat(dao.getCount(), is(2));
 
         User userGet1 = dao.get(user1.getId());
+        checkSameUser(userGet1, user1);
+
         User userGet2 = dao.get(user2.getId());
-
-        assertThat(userGet1.getName(), is(user1.getName()));
-        assertThat(user1.getName(), is(userGet1.getName()));
-
-        assertThat(userGet2.getName(), is(user2.getName()));
-        assertThat(user2.getName(), is(userGet2.getName()));
+        checkSameUser(userGet2, user2);
 
     }
 
@@ -74,7 +71,7 @@ public class UserDaoTest {
     public void getCount() throws SQLException, ClassNotFoundException {
         dao.deleteAll();
         assertThat(dao.getCount(), is(0));
-        
+
         dao.add(user1);
         assertThat(dao.getCount(), is(1));
 
@@ -119,7 +116,7 @@ public class UserDaoTest {
         checkSameUser(user3, users3.get(2));
     }
 
-    @Test(expected = DuplicateUserIdException.class)
+    @Test(expected = DuplicateKeyException.class)
     public void duplicateKey() {
         dao.deleteAll();
 
@@ -139,6 +136,28 @@ public class UserDaoTest {
             SQLExceptionTranslator set = new SQLErrorCodeSQLExceptionTranslator(this.dataSource);
             assertThat(set.translate(null, null, sqlEx), is(DuplicateKeyException.class));
         }
+    }
+
+    @Test
+    public void update() {
+        dao.deleteAll();
+
+        dao.add(user1);
+        dao.add(user2);
+        
+        user1.setName("업데이터1");
+        user1.setPassword("업데이트123");
+        user1.setLevel(Level.GOLD);
+        user1.setLogin(1000);
+        user1.setRecommend(999);
+        
+        dao.update(user1);
+
+        User user1update = dao.get(user1.getId());
+        checkSameUser(user1, user1update);
+        User user2same = dao.get(user2.getId());
+        checkSameUser(user2, user2same);
+
     }
 
     private void checkSameUser(User user1, User user2) {
