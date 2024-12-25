@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 public class CountingDaoFactory {
     
     @Bean
-    public UserDao userDao() {
+    public UserDaoJdbc userDao() {
     // DataSource 인터페이스 사용 예제 시작이후 사용 안하기에 주석처리
     //    return new UserDao(connectionMaker()); 
         return null;
