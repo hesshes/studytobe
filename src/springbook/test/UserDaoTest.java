@@ -23,6 +23,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import springbook.exception.DuplicateUserIdException;
 import springbook.user.dao.UserDaoJdbc;
+import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -44,12 +45,9 @@ public class UserDaoTest {
 
     @Before
     public void setUp() {
-        System.out.println(this.ctx);
-        System.out.println(this);
-        // this.dao = this.ctx.getBean("userDao", UserDaoJdbc.class);
-        this.user1 = new User("tester1", "pass1", "테스터1");
-        this.user2 = new User("tester2", "pass2", "테스터2");
-        this.user3 = new User("tester3", "pass3", "테스터3");
+        this.user1 = new User("tester1", "pass1", "테스터1", Level.BASIC, 1, 0);
+        this.user2 = new User("tester2", "pass2", "테스터2", Level.SILVER, 55, 10);
+        this.user3 = new User("tester3", "pass3", "테스터3", Level.GOLD, 100, 40);
     }
 
     @Test
@@ -76,11 +74,7 @@ public class UserDaoTest {
     public void getCount() throws SQLException, ClassNotFoundException {
         dao.deleteAll();
         assertThat(dao.getCount(), is(0));
-
-        User user1 = new User("tester1", "pass1", "테스터1");
-        User user2 = new User("tester2", "pass2", "테스터2");
-        User user3 = new User("tester3", "pass3", "테스터3");
-
+        
         dao.add(user1);
         assertThat(dao.getCount(), is(1));
 
@@ -151,6 +145,9 @@ public class UserDaoTest {
         assertThat(user1.getId(), is(user2.getId()));
         assertThat(user1.getName(), is(user2.getName()));
         assertThat(user1.getPassword(), is(user2.getPassword()));
+        assertThat(user1.getLevel(), is(user2.getLevel()));
+        assertThat(user1.getLogin(), is(user2.getLogin()));
+        assertThat(user1.getRecommend(), is(user2.getRecommend()));
     }
 
 }
