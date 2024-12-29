@@ -13,11 +13,10 @@
         <property name="username" value="tobe" />
         <property name="password" value="t@eWoo0151" />
     </bean>
+
     <bean id="userService" class="springbook.user.service.UserService">
         <property name="userDao" ref="userDao" />
     </bean>
 
-    <bean id="userLevelUpgrade" class="springbook.user.service.UserLevelUpgradePolicy">
-        <property name="userDao" ref="userDao" />
-    </bean>
+    <bean id="userLevelUpgrade" class="springbook.user.service.UserLevelUpgradePolicy" />
 </beans>

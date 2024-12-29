@@ -1,6 +1,7 @@
 package springbook.test;
 
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import springbook.exception.TestUserServiceException;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
@@ -24,6 +26,7 @@ import springbook.user.service.UserService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/applicationContext-test.xml")
 public class UserServiceTest {
+
     @Autowired
     UserService userService;
 
@@ -34,7 +37,8 @@ public class UserServiceTest {
 
     @Before
     public void setUp() {
-        users = Arrays.asList(new User("bumjin", "박범진", "p1", Level.BASIC, UserLevelUpgradePolicy.MIN_LOGCOUNT_FOR_SILVER - 1, 0),
+        users = Arrays.asList(
+                new User("bumjin", "박범진", "p1", Level.BASIC, UserLevelUpgradePolicy.MIN_LOGCOUNT_FOR_SILVER - 1, 0),
                 new User("joytouch", "강명성", "p2", Level.BASIC, UserLevelUpgradePolicy.MIN_LOGCOUNT_FOR_SILVER, 0),
                 new User("erwins", "신승환", "p3", Level.SILVER, UserLevelUpgradePolicy.MIN_LOGCOUNT_FOR_SILVER + 30,
                         UserLevelUpgradePolicy.MIN_RECCOMENT_FOR_GOLD - 1),
@@ -83,6 +87,23 @@ public class UserServiceTest {
 
     }
 
+    @Test
+    public void upgradeAllOrNothing() {
+        UserService testUserSeriService = new TestUserService(users.get(3).getId());
+        testUserSeriService.setUserDao(this.dao);
+        dao.deleteAll();
+        for (User user : users)
+            dao.add(user);
+
+        try {
+            testUserSeriService.upgradeLevels();
+            fail("TestUserServiceException expected");
+        } catch (TestUserServiceException e) {
+
+        }
+        checkLevelUpgraded(users.get(1), false);
+    }
+
     private void checkLevelUpgraded(User user, boolean upgraded) {
         User userUpdate = dao.get(user.getId());
         if (upgraded) {
@@ -92,4 +113,17 @@ public class UserServiceTest {
         }
     }
 
+    static class TestUserService extends UserService {
+        private String id;
+
+        private TestUserService(String id) {
+            this.id = id;
+        }
+
+        protected void upgradeLevel(User user) {
+            if (user.getId().equals(this.id))
+                throw new TestUserServiceException();
+            super.upgradeLevel(user);
+        }
+    }
 }

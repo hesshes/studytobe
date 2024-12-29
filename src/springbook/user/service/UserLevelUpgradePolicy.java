@@ -1,5 +1,6 @@
 package springbook.user.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
@@ -7,11 +8,8 @@ import springbook.user.domain.User;
 
 public class UserLevelUpgradePolicy implements UserLevelUpgrade {
 
+    @Autowired
     UserDao userDao;
-
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
 
     public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
     public static final int MIN_RECCOMENT_FOR_GOLD = 30;
