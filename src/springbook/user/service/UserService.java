@@ -10,15 +10,14 @@ import springbook.user.domain.User;
 
 public class UserService {
 
-    @Autowired
     UserDao userDao;
 
     @Autowired
     UserLevelUpgrade userLevelPolicy;
 
-//    public void setUserDao(UserDao userDao) {
-//        this.userDao = userDao;
-//    }
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     public void add(User user) {
         if (user.getLevel() == null)
