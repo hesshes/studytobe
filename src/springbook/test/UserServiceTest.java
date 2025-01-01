@@ -6,6 +6,8 @@ import static org.junit.Assert.fail;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
@@ -15,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import springbook.exception.TestUserServiceException;
 import springbook.user.dao.UserDao;
@@ -32,6 +35,12 @@ public class UserServiceTest {
 
     @Autowired
     UserDao dao;
+
+    @Autowired
+    DataSource dataSource;
+
+    @Autowired
+    PlatformTransactionManager transactionManager;
 
     List<User> users;
 
@@ -71,7 +80,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void upgradeLevels() {
+    public void upgradeLevels() throws Exception {
         dao.deleteAll();
         for (User user : users) {
             dao.add(user);
@@ -88,15 +97,17 @@ public class UserServiceTest {
     }
 
     @Test
-    public void upgradeAllOrNothing() {
-        UserService testUserSeriService = new TestUserService(users.get(3).getId());
-        testUserSeriService.setUserDao(this.dao);
+    public void upgradeAllOrNothing() throws Exception {
+        UserService testUserService = new TestUserService(users.get(3).getId());
+        testUserService.setUserDao(this.dao);
+        testUserService.setTransactionManager(this.transactionManager);
+
         dao.deleteAll();
         for (User user : users)
             dao.add(user);
 
         try {
-            testUserSeriService.upgradeLevels();
+            testUserService.upgradeLevels();
             fail("TestUserServiceException expected");
         } catch (TestUserServiceException e) {
 
