@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -41,20 +42,26 @@ public class UserServiceTest {
 
     @Autowired
     PlatformTransactionManager transactionManager;
+    
+    @Autowired
+    MailSender mailSender;
+    
 
     List<User> users;
 
     @Before
     public void setUp() {
         users = Arrays.asList(
-                new User("bumjin", "박범진", "p1", Level.BASIC, UserLevelUpgradePolicy.MIN_LOGCOUNT_FOR_SILVER - 1, 0),
-                new User("joytouch", "강명성", "p2", Level.BASIC, UserLevelUpgradePolicy.MIN_LOGCOUNT_FOR_SILVER, 0),
+                new User("bumjin", "박범진", "p1", Level.BASIC, UserLevelUpgradePolicy.MIN_LOGCOUNT_FOR_SILVER - 1, 0,
+                        "bumjin@email.com"),
+                new User("joytouch", "강명성", "p2", Level.BASIC, UserLevelUpgradePolicy.MIN_LOGCOUNT_FOR_SILVER, 0,
+                        "joytouch@email.com"),
                 new User("erwins", "신승환", "p3", Level.SILVER, UserLevelUpgradePolicy.MIN_LOGCOUNT_FOR_SILVER + 30,
-                        UserLevelUpgradePolicy.MIN_RECCOMENT_FOR_GOLD - 1),
+                        UserLevelUpgradePolicy.MIN_RECCOMENT_FOR_GOLD - 1, "erwins@email.com"),
                 new User("madnite1", "이상호", "p4", Level.SILVER, UserLevelUpgradePolicy.MIN_LOGCOUNT_FOR_SILVER + 30,
-                        UserLevelUpgradePolicy.MIN_RECCOMENT_FOR_GOLD),
+                        UserLevelUpgradePolicy.MIN_RECCOMENT_FOR_GOLD, "madnite1@email.com"),
                 new User("green", "오민규", "p5", Level.GOLD, UserLevelUpgradePolicy.MIN_LOGCOUNT_FOR_SILVER + 70,
-                        Integer.MAX_VALUE));
+                        Integer.MAX_VALUE, "green@email.com"));
     }
 
     @Test
@@ -101,6 +108,7 @@ public class UserServiceTest {
         UserService testUserService = new TestUserService(users.get(3).getId());
         testUserService.setUserDao(this.dao);
         testUserService.setTransactionManager(this.transactionManager);
+        testUserService.setMailSender(mailSender);
 
         dao.deleteAll();
         for (User user : users)

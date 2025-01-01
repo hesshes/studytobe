@@ -56,9 +56,9 @@ public class UserDaoJdbc implements UserDao {
 //        } catch (DuplicateKeyException e) {
 //            throw new DuplicateUserIdException(e);
 //        }
-        this.jdbcTemplate.update("insert into users(id, name, password, level, login, recommend) values(?,?,?,?,?,?)",
+        this.jdbcTemplate.update("insert into users(id, name, password, level, login, recommend, email) values(?,?,?,?,?,?,?)",
                 user.getId(), user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(),
-                user.getRecommend());
+                user.getRecommend(),user.getEmail());
 //        try {
 //            this.c = dataSource.getConnection();
 //            this.ps = c.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
