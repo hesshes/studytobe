@@ -66,12 +66,7 @@ public class UserService {
     public void upgradeLevels() throws SQLException {
         TransactionStatus status = this.transactionManager.getTransaction(new DefaultTransactionDefinition());
         try {
-            List<User> users = userDao.getAll();
-            for (User user : users) {
-                if (canUpgradeLevel(user)) {
-                    upgradeLevel(user);
-                }
-            }
+            upgradeLevelsInternal();
             this.transactionManager.commit(status);
         } catch (Exception e) {
             this.transactionManager.rollback(status);
@@ -108,5 +103,14 @@ public class UserService {
 
         mailSender.send(mailMessage);
 
+    }
+
+    private void upgradeLevelsInternal() {
+        List<User> users = userDao.getAll();
+        for (User user : users) {
+            if (canUpgradeLevel(user)) {
+                upgradeLevel(user);
+            }
+        }
     }
 }
