@@ -30,6 +30,8 @@ import springbook.user.domain.Level;
 import springbook.user.domain.User;
 import springbook.user.service.UserLevelUpgradePolicy;
 import springbook.user.service.UserService;
+import springbook.user.service.UserServiceImpl;
+import springbook.user.service.UserServiceTx;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/applicationContext-test.xml")
@@ -38,6 +40,9 @@ public class UserServiceTest {
     @Autowired
     UserService userService;
 
+    @Autowired
+    UserServiceImpl UserServiceImpl;
+    
     @Autowired
     UserDao dao;
 
@@ -98,9 +103,9 @@ public class UserServiceTest {
         }
 
         MockMailSender mockMailSender = new MockMailSender();
-        userService.setMailSender(mockMailSender);
         
-        userService.upgradeLevels();
+        UserServiceImpl.setMailSender(mockMailSender);
+        UserServiceImpl.upgradeLevels();
 
         checkLevelUpgraded(users.get(0), false);
         checkLevelUpgraded(users.get(1), true);
@@ -117,17 +122,21 @@ public class UserServiceTest {
 
     @Test
     public void upgradeAllOrNothing() throws Exception {
-        UserService testUserService = new TestUserService(users.get(3).getId());
+        TestUserService testUserService = new TestUserService(users.get(3).getId());
         testUserService.setUserDao(this.dao);
         testUserService.setTransactionManager(this.transactionManager);
         testUserService.setMailSender(mailSender);
+        
+        UserServiceTx userServiceTx = new UserServiceTx();
+        userServiceTx.setTransactionManager(transactionManager);
+        userServiceTx.setUserService(testUserService);
 
         dao.deleteAll();
         for (User user : users)
             dao.add(user);
 
         try {
-            testUserService.upgradeLevels();
+            userServiceTx.upgradeLevels();
             fail("TestUserServiceException expected");
         } catch (TestUserServiceException e) {
 
@@ -144,14 +153,14 @@ public class UserServiceTest {
         }
     }
 
-    static class TestUserService extends UserService {
+    static class TestUserService extends UserServiceImpl {
         private String id;
 
         private TestUserService(String id) {
             this.id = id;
         }
 
-        protected void upgradeLevel(User user) {
+        public void upgradeLevel(User user) {
             if (user.getId().equals(this.id))
                 throw new TestUserServiceException();
             super.upgradeLevel(user);
