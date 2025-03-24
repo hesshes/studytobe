@@ -9,9 +9,9 @@
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.cj.jdbc.Driver" />
         <property name="url"
-            value="jdbc:mysql://121.162.161.70:60335/tobe?serverTimezone=UTC&amp;useUniCode=yes&amp;characterEncoding=UTF-8" />
-        <property name="username" value="tobe" />
-        <property name="password" value="t@eWoo0151" />
+            value="jdbc:mysql://tobe?serverTimezone=UTC&amp;useUniCode=yes&amp;characterEncoding=UTF-8" />
+        <property name="username" value="" />
+        <property name="password" value="" />
     </bean>
 
     <bean id="userService" class="springbook.user.service.UserServiceTx">
